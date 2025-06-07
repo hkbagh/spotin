@@ -19,7 +19,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hkbagh.spotin.ui.theme.SpotinTheme
-import io.github.jan.supabase.gotrue.gotrue
+import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.auth.providers.builtin.Email
 import kotlinx.coroutines.launch
 
 class LoginActivity : ComponentActivity() {
@@ -86,9 +87,12 @@ fun LoginScreen(activity: ComponentActivity) {
             onClick = {
                 coroutineScope.launch {
                     try {
-                        supabase.gotrue.signInWith(email = email, password = password)
+                        supabase.auth.signInWith(Email) {
+                            email = email
+                            password = password
+                        }
                         Toast.makeText(context, "Login Successful!", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(context, MainActivity::class.java)
+                        val intent = Intent(context, HomeActivity::class.java)
                         activity.startActivity(intent)
                         activity.finish()
                     } catch (e: Exception) {
@@ -109,7 +113,7 @@ fun LoginScreen(activity: ComponentActivity) {
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Don't have an account? Sign Up")
+            Text("Don\'t have an account? Sign Up")
         }
     }
 }

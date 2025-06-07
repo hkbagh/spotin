@@ -19,7 +19,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hkbagh.spotin.ui.theme.SpotinTheme
-import io.github.jan.supabase.gotrue.gotrue
+import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.auth.providers.builtin.Email
 import kotlinx.coroutines.launch
 
 class SignUpActivity : ComponentActivity() {
@@ -60,7 +61,7 @@ fun SignUpScreen(activity: ComponentActivity) {
         )
         Spacer(modifier = Modifier.height(32.dp))
         Text(
-            text = "Create Your Account",
+            text = "Create Your Spotin Account",
             style = MaterialTheme.typography.headlineLarge,
             modifier = Modifier.padding(bottom = 32.dp)
         )
@@ -86,9 +87,12 @@ fun SignUpScreen(activity: ComponentActivity) {
             onClick = {
                 coroutineScope.launch {
                     try {
-                        supabase.gotrue.signUpWith(email = email, password = password)
+                        supabase.auth.signUpWith(Email) {
+                            email = email
+                            password = password
+                        }
                         Toast.makeText(context, "Registration Successful! Please check your email for verification.", Toast.LENGTH_LONG).show()
-                        val intent = Intent(context, LoginActivity::class.java)
+                        val intent = Intent(context, HomeActivity::class.java)
                         activity.startActivity(intent)
                         activity.finish()
                     } catch (e: Exception) {
